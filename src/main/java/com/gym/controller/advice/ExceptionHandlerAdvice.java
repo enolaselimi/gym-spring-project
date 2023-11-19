@@ -2,7 +2,7 @@ package com.gym.controller.advice;
 
 import com.gym.domain.exception.ExceptionMessage;
 import com.gym.domain.exception.ResourceNotFoundException;
-import com.gym.domain.exception.UserNotFoundException;
+import com.gym.domain.exception.LogInFailedException;
 import jakarta.persistence.NoResultException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ public class ExceptionHandlerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ExceptionMessage> handleResourceNotFoundException(UserNotFoundException exp,
+    public ResponseEntity<ExceptionMessage> handleResourceNotFoundException(LogInFailedException exp,
                                                                             HttpServletRequest req){
         var response = new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), req.getRequestURI(), "User not found.");
         return new ResponseEntity(response,HttpStatus.BAD_REQUEST);

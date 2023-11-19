@@ -15,6 +15,7 @@ import com.gym.service.PlanService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -32,6 +33,7 @@ public class ClientController {
 
     @GetMapping
     @TrackExecutionTime
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<ClientDTO>> findAll(@RequestParam(required = false) String name,
                                                    @RequestParam(required = false) String planId,
                                                    @RequestParam(required = false) String sort,
@@ -62,6 +64,7 @@ public class ClientController {
     }
 
     @GetMapping("/{clientId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ClientDTO> findById(@PathVariable Integer clientId){
         ClientDTO clientDTO = clientService.findById(clientId);
         if(clientDTO == null){
@@ -71,6 +74,7 @@ public class ClientController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> createClient(@RequestBody @Valid ClientRequest clientRequest,
                                              UriComponentsBuilder ucb){
         var createdClient = clientService.save(clientRequest);
@@ -82,6 +86,7 @@ public class ClientController {
     }
 
     @PutMapping("/{clientId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
     public ResponseEntity<Void> updateClient(@PathVariable Integer clientId, @RequestBody @Valid ClientRequest request){
         Plan plan = PlanConverter.fromDTOtoEntity(planService.findById(request.getPlan_id()));
         ClientDTO clientToUpdate = ClientConverter.toDTO(
@@ -93,6 +98,7 @@ public class ClientController {
                 ResponseEntity.notFound().build();
     }
     @DeleteMapping("/{clientId}/delete")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
     public ResponseEntity<Void> deleteClient(@PathVariable Integer clientId){
         this.clientService.delete(clientService.findById(clientId));
         return  ResponseEntity.noContent().build();
@@ -101,6 +107,7 @@ public class ClientController {
 
     //Get which plan a specific client is subscribed to.
     @GetMapping("{clientId}/plan")
+    @PreAuthorize("hasAnyRole('ROLE_CLIENT')")
     public ResponseEntity<PlanDTO> getClientPlan(@PathVariable Integer clientId){
         PlanDTO planDTO = clientService.findPlanByClientId(clientId);
         if(planDTO == null){
@@ -111,6 +118,7 @@ public class ClientController {
 
     //Get all exercises a specific client has to do.
     @GetMapping("/{clientId}/exercises")
+    @PreAuthorize("hasAnyRole('ROLE_CLIENT', 'ROLE_INSTRUCTOR')")
     public ResponseEntity<List<ExerciseDTO>> findAllExercisesForGivenClient(@PathVariable Integer clientId,
                                                                             @RequestParam(required = false) String name,
                                                                             @RequestParam(required = false) String sort,
@@ -136,6 +144,7 @@ public class ClientController {
 
     //Subscribe client to a new plan.
     @PutMapping("/{clientId}/subscribe/{planId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
     public ResponseEntity<Void> subscribeToNewPlan(@PathVariable Integer clientId,
                                                    @PathVariable Integer planId){
         ClientDTO clientFound = clientService.findById(clientId);

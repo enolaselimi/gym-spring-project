@@ -11,6 +11,7 @@ import com.gym.domain.mapper.InstructorConverter;
 import com.gym.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -26,6 +27,7 @@ public class InstructorController {
 
     @GetMapping
     @TrackExecutionTime
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CLIENT')")
     public ResponseEntity<List<InstructorDTO>> findAll(@RequestParam(required = false) String name,
                                                        @RequestParam(required = false) String sort,
                                                        @RequestParam(required = false) Integer pageNumber,
@@ -52,6 +54,7 @@ public class InstructorController {
     }
 
     @GetMapping("/{instructorId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public ResponseEntity<InstructorDTO> findById(@PathVariable Integer instructorId){
         InstructorDTO instructorDTO = instructorService.findById(instructorId);
         if(instructorDTO == null){
@@ -61,6 +64,7 @@ public class InstructorController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> createInstructor(@RequestBody InstructorRequest instructorRequest,
                                                UriComponentsBuilder ucb){
         var createdEntity = instructorService.save(instructorRequest);
@@ -72,6 +76,7 @@ public class InstructorController {
     }
 
     @PutMapping("/{instructorId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public ResponseEntity<Void> updateInstructor(@PathVariable Integer instructorId, @RequestBody InstructorRequest request){
         InstructorDTO instructorDTO = InstructorConverter.toDTO(
                 InstructorConverter.toEntity(request)
@@ -82,6 +87,7 @@ public class InstructorController {
                 ResponseEntity.notFound().build();
     }
     @DeleteMapping("/{instructorId}/delete")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public ResponseEntity<Void> deleteInstructor(@PathVariable Integer instructorId){
         this.instructorService.delete(instructorService.findById(instructorId));
         return  ResponseEntity.noContent().build();
@@ -89,6 +95,7 @@ public class InstructorController {
 
     //Get all plans for a given instructor.
     @GetMapping("/{instructorId}/plans")
+    @PreAuthorize("hasAnyRole('ROLE_CLIENT', 'ROLE_INSTRUCTOR')")
     public ResponseEntity<List<PlanDTO>> getAllPlansForGivenInstructor(@PathVariable Integer instructorId,
                                                                        @RequestParam(required = false) String name,
                                                                        @RequestParam(required = false) String sort,
@@ -118,6 +125,7 @@ public class InstructorController {
     //Get all clients for a given instructor.
     @GetMapping("/{instructorId}/clients")
     @TrackExecutionTime
+    @PreAuthorize("hasRole('ROLE_INSTRUCTOR')")
     public ResponseEntity<List<ClientDTO>> getAllClientsForGivenInstructor(@PathVariable Integer instructorId,
                                                                            @RequestParam(required = false) String name,
                                                                            @RequestParam(required = false) String planId,

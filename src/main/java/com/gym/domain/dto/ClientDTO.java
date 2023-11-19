@@ -1,5 +1,6 @@
 package com.gym.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientDTO {
+    @JsonIgnore
     private Integer id;
     @NotBlank(message = "Name cannot be empty.")
     @Size(min = 2, message = "Name cannot be less than 2 characters.")

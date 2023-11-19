@@ -1,4 +1,4 @@
-package configuration;
+package com.gym.service;
 
 import com.gym.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,6 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.err.println("TEST");
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials."));
     }

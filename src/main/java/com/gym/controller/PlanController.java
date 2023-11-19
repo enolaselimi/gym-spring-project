@@ -18,6 +18,7 @@ import com.gym.service.PlanService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -39,6 +40,7 @@ public class PlanController {
 
     @GetMapping
     @TrackExecutionTime
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
     public ResponseEntity<List<PlanDTO>> findAll(@RequestParam(required = false) String name,
                                                  @RequestParam(required = false) String sort,
                                                  @RequestParam(required = false) Integer pageNumber,
@@ -65,12 +67,14 @@ public class PlanController {
     }
 
     @GetMapping("/{planId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
     public ResponseEntity<PlanDTO> findById(@PathVariable Integer planId){
         PlanDTO planDTO = planService.findById(planId);
         return ResponseEntity.ok(planDTO);
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_INSTRUCTOR')")
     public ResponseEntity<Void> createPlan(@RequestBody @Valid PlanRequest planRequest,
                                              UriComponentsBuilder ucb){
         var createdPlan = planService.save(planRequest);
@@ -82,6 +86,7 @@ public class PlanController {
     }
 
     @PutMapping("/{planId}")
+    @PreAuthorize("hasRole('ROLE_INSTRUCTOR')")
     public ResponseEntity<Void> updatePlan(@PathVariable Integer planId, @RequestBody @Valid PlanRequest request){
         Instructor instructor = InstructorConverter.fromDTOtoEntity(instructorService.findById(request.getInstructor_id()));
         PlanDTO planToUpdate = PlanConverter.toDTO(
@@ -93,6 +98,7 @@ public class PlanController {
                 ResponseEntity.notFound().build();
     }
     @DeleteMapping("/{planId}/delete")
+    @PreAuthorize("hasAnyRole('ROLE_INSTRUCTOR', 'ROLE_ADMIN')")
     public ResponseEntity<Void> deletePlan(@PathVariable Integer planId){
         this.planService.delete(planService.findById(planId));
         return  ResponseEntity.noContent().build();
@@ -101,6 +107,7 @@ public class PlanController {
     //Get all exercises within a plan.
     @TrackExecutionTime
     @GetMapping("/{planId}/exercises")
+    @PreAuthorize("hasAnyRole('ROLE_INSTRUCTOR', 'ROLE_CLIENT')")
     public ResponseEntity<List<PlanExerciseDTO>> getPlanExercises(@PathVariable Integer planId,
                                                                   @RequestParam(required = false) String day,
                                                                   @RequestParam(required = false) String sets,
@@ -133,6 +140,7 @@ public class PlanController {
 
     //Get which instructor created a plan.
     @GetMapping("/{planId}/instructor")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
     public ResponseEntity<InstructorDTO> getPlanInstructor(@PathVariable Integer planId){
         InstructorDTO instructorDTO = planService.findInstructorByPlanId(planId);
         if(instructorDTO == null){
@@ -143,6 +151,7 @@ public class PlanController {
 
     //Add exercise to a plan.
     @PostMapping("/exercise")
+    @PreAuthorize("hasRole('ROLE_INSTRUCTOR')")
     public ResponseEntity<Void> addExerciseToGivenPlan(@RequestBody PlanExerciseRequest planExerciseRequest,
                                                        UriComponentsBuilder ucb){
         PlanExerciseDTO planExerciseDTO = planExerciseService.save(planExerciseRequest);
@@ -155,6 +164,7 @@ public class PlanController {
 
     //Remove exercise from a plan.
     @DeleteMapping("/{planId}/{exerciseId}/delete")
+    @PreAuthorize("hasRole('ROLE_INSTRUCTOR')")
     public ResponseEntity<Void> deletePlanExercise(@PathVariable Integer planId,
                                                    @PathVariable Integer exerciseId){
         this.planExerciseService.delete(planExerciseService.findById(planId, exerciseId));
@@ -163,6 +173,7 @@ public class PlanController {
 
     //Change exercise info on a given plan.
     @PutMapping("/{planId}/{exerciseId}/update")
+    @PreAuthorize("hasRole('ROLE_INSTRUCTOR')")
     public ResponseEntity<Void> changeExerciseInfoForGivenPlan(@PathVariable Integer planId,
                                                                @PathVariable Integer exerciseId,
                                                                @RequestBody @Valid PlanExerciseRequest planExerciseRequest) {

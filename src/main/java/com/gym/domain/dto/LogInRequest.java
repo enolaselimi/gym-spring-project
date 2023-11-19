@@ -1,6 +1,5 @@
 package com.gym.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +10,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class InstructorDTO {
-    @JsonIgnore
-    private Integer id;
-    @NotBlank(message = "Name cannot be blank")
-    private String name;
+public class LogInRequest {
+    @NotBlank(message = "Username cannot be empty.")
+    private String username;
+    @NotBlank(message = "Password cannot be empty.")
+    private String password;
 }

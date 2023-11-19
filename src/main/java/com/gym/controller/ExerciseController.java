@@ -10,6 +10,7 @@ import com.gym.domain.mapper.ExerciseConverter;
 import com.gym.service.ExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
@@ -24,6 +25,7 @@ public class ExerciseController {
 
     @GetMapping
     @TrackExecutionTime
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public ResponseEntity<List<ExerciseDTO>> findAll(@RequestParam(required = false) String name,
                                                      @RequestParam(required = false) String sort,
                                                      @RequestParam(required = false) Integer pageNumber,
@@ -50,6 +52,7 @@ public class ExerciseController {
     }
 
     @GetMapping("/{exerciseId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public ResponseEntity<ExerciseDTO> findById(@PathVariable Integer exerciseId){
         ExerciseDTO exerciseDTO = exerciseService.findById(exerciseId);
         if(exerciseDTO == null){
@@ -59,6 +62,7 @@ public class ExerciseController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> createExercise(@RequestBody ExerciseRequest exerciseRequest,
                                              UriComponentsBuilder ucb){
         var createdEntity = exerciseService.save(exerciseRequest);
@@ -70,6 +74,7 @@ public class ExerciseController {
     }
 
     @PutMapping("/{exerciseId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public ResponseEntity<Void> updateExercise(@PathVariable Integer exerciseId, @RequestBody ExerciseRequest request){
         ExerciseDTO exerciseDTO = ExerciseConverter.toDTO(
                 ExerciseConverter.toEntity(request)
@@ -80,6 +85,7 @@ public class ExerciseController {
                 ResponseEntity.notFound().build();
     }
     @DeleteMapping("/{exerciseId}/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteExercise(@PathVariable Integer exerciseId){
         this.exerciseService.delete(exerciseService.findById(exerciseId));
         return  ResponseEntity.noContent().build();
@@ -87,6 +93,7 @@ public class ExerciseController {
 
     //Get all plans which include a specific exercise.
     @GetMapping("/{exerciseId}/plans")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<PlanDTO>> findAllPlansOfGivenExercise(@PathVariable Integer exerciseId,
                                                                      @RequestParam(required = false) String name,
                                                                      @RequestParam(required = false) String sort,
