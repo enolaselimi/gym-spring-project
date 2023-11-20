@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InstructorDTO {
-    @JsonIgnore
+
     private Integer id;
     @NotBlank(message = "Name cannot be blank")
     private String name;

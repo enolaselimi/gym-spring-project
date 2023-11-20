@@ -72,8 +72,7 @@ public class ClientServiceMockTest {
     @Test
     public void test_saveClient(){
         ClientRequest clientRequestToSave = new ClientRequest("New Client", "test@email.com",
-                LocalDate.of(1999, 4, 2), LocalDate.of(2023,11,11),
-                64.5f, 169.8f, 1);
+                "1999-04-02", "2023-11-11", 64.5f, 169.8f, 1);
         PlanDTO planDTO = new PlanDTO(1, "test", new InstructorDTO(1, "ins test"),Difficulty.EASY);
         Client convertedClientToSave = ClientConverter.toEntity(clientRequestToSave,
                 PlanConverter.fromDTOtoEntity(planDTO));
@@ -90,7 +89,7 @@ public class ClientServiceMockTest {
                 () -> Assertions.assertNotNull(savedClient),
                 () -> Assertions.assertEquals("New Client", savedClient.getName()),
                 () -> Assertions.assertEquals("test@email.com", savedClient.getEmail()),
-                () -> Assertions.assertEquals(LocalDate.of(1999, 4, 2), savedClient.getDateOfBirth()),
+                () -> Assertions.assertEquals(LocalDate.of(1999,04,02), savedClient.getDateOfBirth()),
                 () -> Assertions.assertEquals(LocalDate.of(2023,11,11), savedClient.getDateJoined()),
                 () -> Assertions.assertEquals(64.5f, savedClient.getWeight()),
                 () -> Assertions.assertEquals(169.8f, savedClient.getHeight()),

@@ -6,6 +6,8 @@ import com.gym.domain.dto.PlanDTO;
 import com.gym.domain.entity.Client;
 import com.gym.domain.entity.Plan;
 
+import java.time.LocalDate;
+
 public class ClientConverter {
 
     public static ClientDTO toDTO (Client client){
@@ -25,8 +27,8 @@ public class ClientConverter {
         Client client = new Client();
         client.setName(clientRequest.getName());
         client.setEmail(clientRequest.getEmail());
-        client.setDateOfBirth(clientRequest.getDateOfBirth());
-        client.setDateJoined(clientRequest.getDateJoined());
+        client.setDateOfBirth(LocalDate.parse(clientRequest.getDateOfBirth()));
+        client.setDateJoined(LocalDate.parse(clientRequest.getDateJoined()));
         client.setWeight(clientRequest.getWeight());
         client.setHeight(clientRequest.getHeight());
         client.setPlan(plan);

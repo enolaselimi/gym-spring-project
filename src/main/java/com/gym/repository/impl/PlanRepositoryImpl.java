@@ -33,8 +33,16 @@ public class PlanRepositoryImpl implements PlanRepository {
             FIND_ALL_QUERY += "AND p."+filters[0].getField()+" "+filters[0].getOperator()+" '%"+filters[0].getValue()+"%' ";
         }
 
+        if(filters[1].getValue() != null){
+            FIND_ALL_QUERY += "AND p."+filters[1].getField()+" "+filters[1].getOperator()+" '%"+filters[1].getValue()+"%' ";
+        }
+
         if(filters[0].getSort() != null){
             FIND_ALL_QUERY += "ORDER BY p."+filters[0].getField()+" "+filters[0].getSort();
+        }
+
+        if(filters[1].getSort() != null){
+            FIND_ALL_QUERY += "ORDER BY p."+filters[1].getField()+" "+filters[1].getSort();
         }
 
         if(filters[0].getPageSize() != null && filters[0].getPageNumber() != null){

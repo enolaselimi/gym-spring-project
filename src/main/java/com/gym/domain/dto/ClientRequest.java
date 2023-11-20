@@ -1,5 +1,7 @@
 package com.gym.domain.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,9 +21,9 @@ public class ClientRequest {
     @Email(message = "Invalid email format")
     private String email;
     @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Invalid date format")
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
     @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Invalid date format")
-    private LocalDate dateJoined;
+    private String dateJoined;
     @Positive(message = "Invalid weight.")
     private Float weight;
     @Positive(message = "Invalid height.")

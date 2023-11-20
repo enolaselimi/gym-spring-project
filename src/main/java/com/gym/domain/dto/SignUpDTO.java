@@ -1,6 +1,7 @@
 package com.gym.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -15,4 +16,6 @@ public class SignUpDTO {
     private String password;
     @NotBlank(message = "Roles cannot be empty.")
     private String authority;
+    @NotNull
+    private Integer entity_id;
 }

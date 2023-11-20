@@ -25,7 +25,7 @@ public class ExerciseController {
 
     @GetMapping
     @TrackExecutionTime
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR', 'ROLE_CLIENT')")
     public ResponseEntity<List<ExerciseDTO>> findAll(@RequestParam(required = false) String name,
                                                      @RequestParam(required = false) String sort,
                                                      @RequestParam(required = false) Integer pageNumber,
@@ -52,7 +52,7 @@ public class ExerciseController {
     }
 
     @GetMapping("/{exerciseId}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR','ROLE_CLIENT')")
     public ResponseEntity<ExerciseDTO> findById(@PathVariable Integer exerciseId){
         ExerciseDTO exerciseDTO = exerciseService.findById(exerciseId);
         if(exerciseDTO == null){

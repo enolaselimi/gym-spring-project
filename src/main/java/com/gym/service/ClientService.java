@@ -15,5 +15,5 @@ public interface ClientService {
     ClientDTO update(ClientDTO clientDTO);
     ClientDTO delete(ClientDTO clientDTO);
     PlanDTO findPlanByClientId(Integer clientId);
-    List<ExerciseDTO> findAllExercises(Integer clientId,Filter nameFilter);
+    List<ExerciseDTO> findAllExercises(Integer clientId,Filter...filters);
 }

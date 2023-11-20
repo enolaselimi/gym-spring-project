@@ -67,8 +67,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<ExerciseDTO> findAllExercises(Integer clientId, Filter nameFilter) {
-        return clientRepository.findAllExercises(clientId,nameFilter)
+    public List<ExerciseDTO> findAllExercises(Integer clientId, Filter...filters) {
+        return clientRepository.findAllExercises(clientId,filters)
                 .stream()
                 .map(ExerciseConverter::toDTO)
                 .toList();

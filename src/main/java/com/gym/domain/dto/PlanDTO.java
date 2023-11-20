@@ -14,7 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlanDTO {
-    @JsonIgnore
+
     private Integer id;
     @NotBlank(message = "Name cannot be blank")
     private String name;

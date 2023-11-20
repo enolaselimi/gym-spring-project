@@ -31,6 +31,14 @@ public class User implements UserDetails {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> authorities;
+
+    @OneToOne
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    private Client client;
+    @OneToOne
+    @JoinColumn(name = "instructor_id", referencedColumnName = "id")
+    private Instructor instructor;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.authorities;

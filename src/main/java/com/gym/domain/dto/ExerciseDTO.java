@@ -14,7 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExerciseDTO {
-    @JsonIgnore
+
     private Integer id;
     @NotBlank(message = "Exercise name cannot be empty.")
     private String name;

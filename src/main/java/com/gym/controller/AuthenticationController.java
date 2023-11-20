@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.management.relation.RoleNotFoundException;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
@@ -19,8 +21,8 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/signup")
-    public UserDTO registerUser(@RequestBody @Valid SignUpDTO newUser){
-        return authenticationService.registerUser(newUser.getUsername(), newUser.getPassword(), newUser.getAuthority());
+    public UserDTO registerUser(@RequestBody @Valid SignUpDTO newUser) throws RoleNotFoundException {
+        return authenticationService.registerUser(newUser.getUsername(), newUser.getPassword(), newUser.getAuthority(), newUser.getEntity_id());
     }
 
     @PostMapping("/login")

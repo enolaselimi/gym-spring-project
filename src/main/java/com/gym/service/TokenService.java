@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +36,7 @@ public class TokenService {
                 .collect(Collectors.joining(" "));
 
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
-                .issuer("self")
+                .issuer(auth.getName())
                 .issuedAt(now)
                 .subject(auth.getName())
                 .claim("roles", scope)

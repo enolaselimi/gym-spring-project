@@ -16,5 +16,5 @@ public interface ClientRepository {
     Client update(Client client);
     Client delete(Client client);
     Plan findPlanByClientId(Integer clientId);
-    List<Exercise> findAllExercises(Integer clientId, Filter nameFilter);
+    List<Exercise> findAllExercises(Integer clientId, Filter...filters);
 }

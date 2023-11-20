@@ -1,11 +1,14 @@
 package com.gym.service;
 
-
 import com.gym.domain.dto.LogInDTO;
 import com.gym.domain.dto.UserDTO;
+import com.gym.domain.entity.Client;
+import com.gym.domain.entity.Instructor;
 import com.gym.domain.entity.Role;
 import com.gym.domain.entity.User;
 import com.gym.domain.exception.LogInFailedException;
+import com.gym.domain.mapper.ClientConverter;
+import com.gym.domain.mapper.InstructorConverter;
 import com.gym.domain.mapper.UserConverter;
 import com.gym.repository.RoleRepository;
 import com.gym.repository.UserRepository;
@@ -18,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.management.relation.RoleNotFoundException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,12 +44,30 @@ public class AuthenticationService {
     @Autowired
     private TokenService tokenService;
 
-    public UserDTO registerUser(String username, String password, String role){
+    @Autowired
+    private ClientService clientService;
+
+    @Autowired
+    private InstructorService instructorService;
+
+    public UserDTO registerUser(String username, String password, String role, Integer entity_id) throws RoleNotFoundException {
         String passwordEncoded = passwordEncoder.encode(password);
         Role userRole = roleRepository.findByAuthority(role.toUpperCase()).get();
+        if (userRole == null) {
+            throw new RoleNotFoundException("Role not found: " + role);
+        }
         Set<Role> authorities = new HashSet<>();
         authorities.add(userRole);
-        User user = new User(0, username, passwordEncoded, authorities);
+        User user = new User(0, username, passwordEncoded, authorities, null,null);
+        if(role.equalsIgnoreCase("client")){
+            Client client = ClientConverter.fromDTOtoEntity(clientService.findById(entity_id));
+            user.setClient(client);
+        }
+        if(role.equalsIgnoreCase("instructor")){
+            Instructor instructor = InstructorConverter.fromDTOtoEntity(instructorService.findById(entity_id));
+            user.setInstructor(instructor);
+        }
+
         return UserConverter.toDTO(userRepository.save(user));
     }
 
