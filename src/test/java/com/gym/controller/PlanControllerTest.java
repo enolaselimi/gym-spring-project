@@ -81,6 +81,7 @@ public class PlanControllerTest {
         Authentication authentication = Mockito.mock(Authentication.class);
         Mockito.when(authentication.getName()).thenReturn("test");
         User user = new User();
+        user.setUsername("test");
         Instructor instructor = new Instructor();
         instructor.setId(1);
         user.setInstructor(instructor);

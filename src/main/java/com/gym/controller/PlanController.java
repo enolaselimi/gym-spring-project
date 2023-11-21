@@ -88,7 +88,9 @@ public class PlanController {
     public ResponseEntity<Void> createPlan(@RequestBody @Valid PlanRequest planRequest,
                                              UriComponentsBuilder ucb, Authentication auth){
         User user = (User) userService.loadUserByUsername(auth.getName());
-        planRequest.setInstructor_id(user.getInstructor().getId());
+        if(!user.getUsername().equals("admin")){
+            planRequest.setInstructor_id(user.getInstructor().getId());
+        }
         var createdPlan = planService.save(planRequest);
         URI locationOfCreatedPlan = ucb
                 .path("api/plans/{planId}")
